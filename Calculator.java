@@ -1,128 +1,119 @@
 package bca6sem;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-public class Calculator {
-	
-	//declare all calculators components
-	
-	JPanel windowContent;
-	JTextField displayField;
-	JButton button0;
-	JButton button1;
-	JButton button2;
-	JButton button3;
-	JButton button4;
-	JButton button5;
-	JButton button6;
-	JButton button7;
-	JButton button8;
-	JButton button9;
-	JButton buttonPoint;
-	JButton buttonEqual;
-	JButton buttonAdd;
-	JButton buttonSubtract;
-	JButton buttonMul;
-	JButton buttondiv;
-	JPanel p1;
+import javax.swing.*;
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-		//create a panel for displaying text
-		JPanel paneltop = new JPanel();
-		
-		//create a panel for buttons
-		JPanel windowContent = new JPanel();
-		
-		//Set a layout manager for this panel 
-		FlowLayout p1 = new FlowLayout();
-		windowContent.setLayout(p1);
-		paneltop.setLayout(p1);
-		GridLayout g1 = new GridLayout(4,3);
-		windowContent.setLayout(g1);
-		
-		
-		//create controls in memory
-		JTextField displayField = new JTextField(30);
-		JButton button0 = new JButton("0");
-		JButton button1 = new JButton("1");
-		JButton button2 = new JButton("2");
-		JButton button3 = new JButton("3");
-		JButton button4 = new JButton("4");
-		JButton button5 = new JButton("5");
-		JButton button6 = new JButton("6");
-		JButton button7 = new JButton("7");
-		JButton button8 = new JButton("8");
-		JButton button9 = new JButton("9");
-		JButton buttonPoint = new JButton(".");
-		JButton buttonEqual = new JButton("=");
-		JButton buttonAdd = new JButton("+");
-		JButton buttonSubtract = new JButton("-");
-		JButton buttonMul = new JButton("*");
-		JButton buttondiv = new JButton("/");
-		
-		
-		//add controls to the panel
-		paneltop.add(displayField);
-		windowContent.add(button0);
-		windowContent.add(button1);
-		windowContent.add(button2);
-		windowContent.add(button3);
-		windowContent.add(button4);
-		windowContent.add(button5);
-		windowContent.add(button6);
-		windowContent.add(button7);
-		windowContent.add(button8);
-		windowContent.add(button9);
-		windowContent.add(buttonPoint);
-		windowContent.add(buttonEqual);
-		windowContent.add(buttonAdd);
-		windowContent.add(buttonSubtract);
-		windowContent.add(buttonMul);
-		windowContent.add(buttondiv);
-		
-		CalculatorEngine calcEngine = new CalculatorEngine();
-		//CalculatorEngineMsg calcEngine = new CalculatorEngineMsg();
-		button0.addActionListener(calcEngine);
-		button1.addActionListener(calcEngine);
-		button2.addActionListener(calcEngine);
-		button3.addActionListener(calcEngine);
-		button4.addActionListener(calcEngine);
-		button5.addActionListener(calcEngine);
-		button6.addActionListener(calcEngine);
-		button7.addActionListener(calcEngine);
-		button8.addActionListener(calcEngine);
-		button9.addActionListener(calcEngine);
-		buttonPoint.addActionListener(calcEngine);
-		buttonEqual.addActionListener(calcEngine);
-		buttonAdd.addActionListener(calcEngine);
-		buttonSubtract.addActionListener(calcEngine);
-		buttonMul.addActionListener(calcEngine);
-		buttondiv.addActionListener(calcEngine);
-		
-		//create the frame and add the panel
-		JFrame frame = new JFrame("MY First Calcuator in Java");
-		
-		//Add the panel to the top-level container
-//		frame.setContentPane(windowContent);
-		
-		//set the size and make window visible
-		
-		frame.add(paneltop,BorderLayout.NORTH);
-		frame.add(windowContent);
-		frame.setSize(400,400);
-		frame.setVisible(true);
+public class Calculator extends JFrame {
 	
+	//Declare all calculators components
+	private JPanel windowContent;
+	private JTextField displayField;
+	private JButton[] buttons;
+	private String[] buttonNames;
+	
+	
+	private GridBagLayout gridBagLayout;
+	private GridBagConstraints constraints;
+	
+	public String getDisplayFieldText() {
+		return displayField.getText();
 	}
 
-	public void  setDisplayValue(String val) {
-		displayField.setText(val);
+	public void setDisplayFieldText(String text) {
+		this.displayField.setText(text);
+	}
+
+	//Constructor creates the components
+	//and adds they to the frame using of GridBagLayout
+	Calculator() {
+		
+		super("Calculator");
+		
+		CalculatorEngine calculatorEngine = new CalculatorEngine(this);
+		
+		windowContent = new JPanel();
+		
+		//set the layout manager for this panel		
+		gridBagLayout = new GridBagLayout();
+		windowContent.setLayout(gridBagLayout);
+		
+		//create the instance of the GridBagConstrainsts
+		constraints = new GridBagConstraints();
+		
+		//setting constraints for the displayField
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.weightx = 1.0;
+		constraints.weighty = 1.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+
+		//adding displayField
+		displayField = new JTextField();
+		displayField.setHorizontalAlignment(JTextField.RIGHT);
+		addComponent(windowContent, displayField, 0, 0, 7, 1);
+
+		
+		//Settings buttons names
+		String[] buttonNames = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+				".", "=", "+", "-", "*", "/"};
+		
+		//Settings buttons
+		buttons = new JButton[buttonNames.length];
+		
+		//adding buttons and action listeners
+		for(int i = 0; i < buttonNames.length; i++) {
+			buttons[i] = new JButton(buttonNames[i]);
+			buttons[i].addActionListener(calculatorEngine);
+		}
+		
+		//add the first button row
+		addComponent(windowContent, buttons[1], 1, 0, 2, 1);
+		addComponent(windowContent, buttons[2], 1, 2, 2, 1);		
+		addComponent(windowContent, buttons[3], 1, 4, 2, 1);
+		addComponent(windowContent, buttons[12], 1, 6, 1, 1);
+		
+		//add the second button row
+		addComponent(windowContent, buttons[4], 2, 0, 2, 1);
+		addComponent(windowContent, buttons[5], 2, 2, 2, 1);		
+		addComponent(windowContent, buttons[6], 2, 4, 2, 1);
+		addComponent(windowContent, buttons[13], 2, 6, 1, 1);
+		
+		//add the third button row
+		addComponent(windowContent, buttons[7], 3, 0, 2, 1);
+		addComponent(windowContent, buttons[8], 3, 2, 2, 1);		
+		addComponent(windowContent, buttons[9], 3, 4, 2, 1);
+		addComponent(windowContent, buttons[14], 3, 6, 1, 1);
+		
+		//add the fourth button row
+		addComponent(windowContent, buttons[0], 4, 0, 2, 1);
+		addComponent(windowContent, buttons[10], 4, 2, 2, 1);		
+		addComponent(windowContent, buttons[11], 4, 4, 2, 1);
+		addComponent(windowContent, buttons[15], 4, 6, 1, 1);
+		
+		//Set the frame content
+		setContentPane(windowContent);
+		setVisible(true);
+		pack();
+	} //end constructor Calculator()
+	
+	private void addComponent(Container container, Component component, int row,
+			int column, int width, int height) {
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.weightx = 1.0;
+		constraints.weighty = 1.0;
+		constraints.gridx = column;
+		constraints.gridy = row;
+		constraints.gridheight = height;
+		constraints.gridwidth = width;
+		gridBagLayout.setConstraints(component, constraints);
+		container.add(component);
+	} //end method addComponent
+	
+	public static void main(String[] args) {
+		Calculator calculator = new Calculator();
 	}
 
 }
